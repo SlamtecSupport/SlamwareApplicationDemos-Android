@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <ImageView
+        android:id="@+id/button_center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:src="@mipmap/splash_icon"
+        android:textAllCaps="false"/>
+
+    <Button
+        android:id="@+id/button_forward"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/button_center"
+        android:layout_alignRight="@+id/button_center"
+        android:layout_alignLeft="@+id/button_center"
+        android:text="Go Forward"
+        android:textAllCaps="false"/>
+
+    <Button
+        android:id="@+id/button_backward"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button_center"
+        android:layout_alignRight="@+id/button_center"
+        android:layout_alignLeft="@+id/button_center"
+        android:text="Go Backward"
+        android:textAllCaps="false"/>
+
+    <Button
+        android:id="@+id/button_turn_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/button_center"
+        android:layout_alignTop="@id/button_center"
+        android:layout_alignBottom="@id/button_center"
+        android:text="Turn left"
+        android:textAllCaps="false"/>
+
+    <Button
+        android:id="@+id/button_turn_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/button_center"
+        android:layout_alignTop="@id/button_center"
+        android:layout_alignBottom="@id/button_center"
+        android:text="Turn right"
+        android:textAllCaps="false"/>
+
+
+</RelativeLayout>
