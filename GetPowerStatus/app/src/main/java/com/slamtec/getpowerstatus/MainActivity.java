@@ -3,6 +3,7 @@ package com.slamtec.getpowerstatus;
 import android.bluetooth.BluetoothClass;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.slamtec.slamware.AbstractSlamwarePlatform;
@@ -16,10 +17,15 @@ import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = "MainActivity";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        TextView sdkVersion = (TextView) findViewById(R.id.sdk_version);
+        TextView deviceID = (TextView) findViewById(R.id.device_id);
 
         TextView chargingStatus = (TextView) findViewById(R.id.changing_status);
         TextView dcConnected = (TextView) findViewById(R.id.dc_connected);
@@ -37,8 +43,15 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
+        /* 获取版本信息 */
+        sdkVersion.setText(robotPlatform.getSDKVersion());
+
+
+
         try {
 
+            /* 获取Slamware ID */
+            deviceID.setText(robotPlatform.getDeviceId());
 
             /* 获取电源相关信息 */
             PowerStatus powerStatus = robotPlatform.getPowerStatus();
