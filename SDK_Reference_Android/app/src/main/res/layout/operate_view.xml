@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="200dp"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_marginLeft="5dp"
+    >
+
+    <!--机器人位置-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginLeft="5dp"
+        android:background="@color/dim_foreground_dark_disabled">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="当前位置"
+            android:textStyle="bold"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:text="X："
+                android:gravity="center"/>
+
+            <TextView
+                android:id="@+id/location_x"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="    0"
+                android:gravity="right" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:text="Y："
+                android:gravity="center"/>
+
+            <TextView
+                android:id="@+id/location_y"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="    0"
+                android:gravity="right"/>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:text="YAW："
+                android:gravity="center"/>
+
+            <TextView
+                android:id="@+id/location_yaw"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="    0" />
+        </LinearLayout>
+    </LinearLayout><!--机器人位置-->
+
+
+    <!--机器人状态-->
+    <LinearLayout
+        android:id="@+id/robot_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="5dp"
+        android:orientation="vertical"
+        android:background="@color/dim_foreground_dark_disabled" >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="机器人状态"
+            android:textStyle="bold"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:text="当前电量"
+                android:gravity="center"/>
+
+            <TextView
+                android:id="@+id/current_batteryPercentage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="0" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:text="运动状态"
+                android:gravity="center" />
+
+            <TextView
+                android:id="@+id/action_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text=" " />
+
+        </LinearLayout>
+
+
+    </LinearLayout><!--机器人状态-->
+
+
+    <!--移动到目标点-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@color/dim_foreground_dark_disabled">
+        <TextView
+            android:id="@+id/move_to"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="设置目标点"
+            android:textStyle="bold">
+        </TextView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:text="X:"
+                android:gravity="center"/>
+
+            <EditText
+                android:id="@+id/target_x"
+                android:layout_width="70dp"
+                android:layout_height="40dp"
+                android:inputType="number" />
+
+            <TextView
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:text="Y:"
+                android:gravity="center"/>
+            <EditText
+                android:id="@+id/target_y"
+                android:layout_width="70dp"
+                android:layout_height="40dp"
+                android:inputType="number" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/to_point"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:text="到这去"
+            android:layout_gravity="right" />
+
+    </LinearLayout>
+
+
+
+
+    <include
+        layout="@layout/action_control"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_weight="1"
+        android:background="@color/dim_foreground_dark_disabled"/>
+
+</LinearLayout>

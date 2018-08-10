@@ -1,25 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent" android:layout_height="match_parent">
-
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginEnd="387dp"
-        android:layout_marginTop="206dp"
-        android:text="向后" />
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dim_foreground_dark_disabled">
 
     <TextView
-        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="运动控制"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/button_stop"
+        android:layout_width="53dp"
+        android:layout_height="45dp"
+        android:layout_centerInParent="true"
+        android:text="停止"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/button_forward"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="179dp"
-        android:layout_marginTop="139dp"
-        android:text="TextView" />
+        android:layout_above="@id/button_stop"
+        android:layout_alignRight="@+id/button_stop"
+        android:layout_alignLeft="@+id/button_stop"
+        android:text="向前"
+        android:textAllCaps="false"/>
+
+    <Button
+        android:id="@+id/button_backward"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button_stop"
+        android:layout_alignRight="@+id/button_stop"
+        android:layout_alignLeft="@+id/button_stop"
+        android:text="向后"
+        android:textAllCaps="false"/>
+
+    <Button
+        android:id="@+id/button_turn_left"
+        android:layout_width="53dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/button_stop"
+        android:layout_alignTop="@id/button_stop"
+        android:layout_toLeftOf="@+id/button_stop"
+        android:text="向左"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/button_turn_right"
+        android:layout_width="53dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/button_stop"
+        android:layout_alignTop="@id/button_stop"
+        android:layout_toRightOf="@+id/button_stop"
+        android:text="向右"
+        android:textAllCaps="false" />
+
+
+
+
 </RelativeLayout>

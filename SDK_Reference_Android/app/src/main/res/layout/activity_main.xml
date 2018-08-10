@@ -1,114 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
-    tools:layout_editor_absoluteY="25dp">
+    android:orientation="horizontal" >
 
-    <View
-        android:id="@+id/view"
+    <ImageView
+        android:id="@+id/slamware_map"
+        android:layout_weight="1"
+        android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp" />
+        android:background="@color/dim_foreground_dark_disabled" />
 
-    <Button
-        android:id="@+id/button12"
-        android:layout_width="75dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignTop="@+id/button8"
-        android:layout_marginEnd="53dp"
-        android:text="向右"
-        tools:layout_editor_absoluteX="811dp"
-        tools:layout_editor_absoluteY="510dp" />
+    <include
+        layout="@layout/operate_view"
+        android:layout_width="200dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0" />
 
-    <Button
-        android:id="@+id/button11"
-        android:layout_width="75dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignTop="@+id/button8"
-        android:layout_marginEnd="240dp"
-        android:text="向左"
-        tools:layout_editor_absoluteX="811dp"
-        tools:layout_editor_absoluteY="510dp" />
 
-    <Button
-        android:id="@+id/button10"
-        android:layout_width="75dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="81dp"
-        android:layout_marginEnd="145dp"
-        android:text="向后"
-        tools:layout_editor_absoluteX="811dp"
-        tools:layout_editor_absoluteY="510dp" />
-
-    <Button
-        android:id="@+id/button9"
-        android:layout_width="75dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignStart="@+id/button8"
-        android:layout_marginBottom="204dp"
-        android:text="向前"
-        tools:layout_editor_absoluteX="811dp"
-        tools:layout_editor_absoluteY="510dp" />
-
-    <Button
-        android:id="@+id/button8"
-        android:layout_width="75dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignStart="@+id/button10"
-        android:layout_marginBottom="143dp"
-        android:text="停止"
-        tools:layout_editor_absoluteX="811dp"
-        tools:layout_editor_absoluteY="510dp" />
-
-    <EditText
-        android:id="@+id/editText"
-        android:layout_width="97dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="83dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="0" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/editText"
-        android:layout_marginEnd="-83dp"
-        android:layout_toStartOf="@+id/editText"
-        android:text="当前电量" />
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginEnd="-83dp"
-        android:layout_marginTop="73dp"
-        android:layout_toStartOf="@+id/editText"
-        android:text="运动状态" />
-
-    <EditText
-        android:id="@+id/editText8"
-        android:layout_width="92dp"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/button9"
-        android:layout_alignStart="@+id/editText"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name" />
-</RelativeLayout>
+</LinearLayout>
