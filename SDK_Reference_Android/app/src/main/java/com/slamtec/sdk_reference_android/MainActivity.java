@@ -1,6 +1,7 @@
 package com.slamtec.sdk_reference_android;
 
 import android.app.Activity;
+import android.app.Notification;
 import android.graphics.Bitmap;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
@@ -9,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -42,15 +44,22 @@ import static com.slamtec.slamware.robot.MapType.BITMAP_8BIT;
 public class MainActivity extends Activity {
 
     private static final String TAG = "MainActivity";
-    AbstractSlamwarePlatform robotPlatform;
+    public static AbstractSlamwarePlatform robotPlatform;
+
+    private IMoveAction moveAction;
+
+    private com.slamtec.slamware.robot.Map map;
+
+    ImageView imageView;
 
 
     private String deviceId;
 
-    Button button_forward;
-    Button button_backward;
-    Button button_turn_left;
-    Button button_turn_right;
+    LongClickButton button_forward;
+    LongClickButton button_backward;
+    LongClickButton button_turn_left;
+    LongClickButton button_turn_right;
+    LongClickButton button_stop;
     TextView current_location_x;
     TextView current_location_y;
     TextView current_location_yaw;
@@ -72,7 +81,7 @@ public class MainActivity extends Activity {
     private Runnable runnable = new Runnable() {
         public void run() {
             this.update();
-            handler.postDelayed(this, 1000);// 间隔100ms
+            handler.postDelayed(this, 33);// 间隔100ms
         }
 
         void update() {
@@ -88,21 +97,16 @@ public class MainActivity extends Activity {
                 int percentage = robotPlatform.getBatteryPercentage();
                 current_battery_percentage.setText(Integer.toString(percentage));
 
-
-//                System.out.println(" get map from slamware ==========");
-//                Log.d(TAG, " get map from slamware ==========");
-
                 /* 获取地图并刷新 */
-                com.slamtec.slamware.robot.Map map;
                 int mapWidth =0;
                 int mapHeight = 0;
 
                 RectF knownArea = robotPlatform.getKnownArea(MapType.BITMAP_8BIT, MapKind.EXPLORE_MAP);
                 map = robotPlatform.getMap(MapType.BITMAP_8BIT, MapKind.EXPLORE_MAP, knownArea);
                 mapWidth = map.getDimension().getWidth();
-//                System.out.println("mapWidth = " + mapWidth);
+/*                System.out.println("mapWidth = " + mapWidth);*/
                 mapHeight = map.getDimension().getHeight();
-//                System.out.println("mapHeight = " + mapHeight);
+/*                System.out.println("mapHeight = " + mapHeight);*/
 
                 Bitmap bitmap = Bitmap.createBitmap(mapWidth, mapHeight, ARGB_8888);
 
@@ -118,9 +122,37 @@ public class MainActivity extends Activity {
                 }
 
                 BitmapDrawable bmpDraw=new BitmapDrawable(bitmap);
-                ImageView imageView = (ImageView)findViewById(R.id.slamware_map);
+
                 imageView.setImageDrawable(bmpDraw);
-//                System.out.println("ImageView Drawable");
+                System.out.println("ImageView Drawable");
+
+                /* 更新机器人运动状态 */
+                if (moveAction!=null && moveAction.isEmpty()) {
+                    actionStatus.setText("IDLE");
+                } else {
+                    switch (moveAction.getStatus()) {
+                        case WAITING_FOR_START:
+                            actionStatus.setText("WAITING_FOR_START");
+                            break;
+                        case RUNNING:
+                            actionStatus.setText("RUNNING");
+                            break;
+                        case ERROR:
+                            actionStatus.setText("ERROR");
+                            break;
+                        case FINISHED:
+                            actionStatus.setText("FINISHED");
+                            break;
+                        case PAUSED:
+                            actionStatus.setText("PAUSED");
+                            break;
+                        case STOPPED:
+                            actionStatus.setText("STOPPED");
+                            break;
+
+                    }
+
+                }
             } catch (RequestFailException e) {
                 e.printStackTrace();
             } catch (ConnectionFailException e) {
@@ -137,12 +169,12 @@ public class MainActivity extends Activity {
                 e.printStackTrace();
             } catch (Exception e) {
                 e.printStackTrace();
+//                Toast.makeText(MainActivity.this,  "发生异常，程序退出", Toast.LENGTH_SHORT).show();
             }
-
-
-
         }
     };
+
+
 
     /* Called when the activity is first created. */
     @Override
@@ -150,10 +182,9 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        handler.postDelayed(runnable, 10);
+        handler.postDelayed(runnable, 50);
 
-
-        robotPlatform = DeviceManager.connect("10.0.130.71", 1445);
+        imageView = (ImageView)findViewById(R.id.slamware_map);
 
         if(robotPlatform != null) {
 
@@ -181,36 +212,19 @@ public class MainActivity extends Activity {
         current_battery_percentage = (TextView) findViewById(R.id.current_batteryPercentage);
         actionStatus = (TextView) findViewById(R.id.action_status);
 
-
-//        firmwareVesion = (TextView) findViewById(R.id.firmware_vesion);
-//        sdkVersion = (TextView) findViewById(R.id.sdk_version);
-
-
-        // go forward
-        button_forward = (Button) findViewById(R.id.button_forward);
-        button_forward.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    robotPlatform.moveBy(MoveDirection.FORWARD);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
         targetX = (EditText) findViewById(R.id.target_x);
         targetY = (EditText) findViewById(R.id.target_y);
 
         Button button = (Button) findViewById(R.id.to_point);
+
+
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
 
                 if(targetX.length()==0 || targetY.length()==0) {
-                    System.out.println("请输入目标点坐标");
-                //    Toast.makeText(this, "请输入目标点坐标", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MainActivity.this, "请输入目标点坐标", Toast.LENGTH_SHORT).show();
                 } else {
 
                     try {
@@ -220,7 +234,6 @@ public class MainActivity extends Activity {
                         System.out.println("x = " + x);
                         System.out.println("y = " + y);
 
-                        IMoveAction action;
                         MoveOption moveOption = new MoveOption();
 
                         moveOption.setPrecise(true);
@@ -229,69 +242,223 @@ public class MainActivity extends Activity {
                         Log.d(TAG, "Move To");
                         Location location1 = new Location(x, y, 0);
 
-
-                        action = robotPlatform.moveTo(location1, moveOption, 0);
-                        //    textView.setText("Move to (0, 1, 0) ...");
-                        action.waitUntilDone();
-                        System.out.println(action.getStatus());
+                        moveAction = robotPlatform.moveTo(location1, moveOption, 0);
+//                        action.waitUntilDone();
+                        System.out.println(moveAction.getStatus());
                     } catch (Exception e) {
                         e.printStackTrace();
-
                     }
+                }
+            }
+        });
 
+        // go forward
+        button_forward = (LongClickButton) findViewById(R.id.button_forward);
+
+        button_forward.setLongClickRepeatListener(new LongClickButton.LongClickRepeatListener() {
+            @Override
+            public void repeatAction() {
+                try {
+                    moveAction = robotPlatform.moveBy(MoveDirection.FORWARD);
+
+                    System.out.println("repeatAction===============");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }, 200);
+
+        button_forward.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+
+                if(motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                    try {
+                        moveAction = robotPlatform.moveBy(MoveDirection.FORWARD);
+
+                        System.out.println("ACTION_DOWN===============");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    try {
+
+                        if(!moveAction.isEmpty())
+                        {
+                            moveAction.cancel();
+                        }
+
+
+                        System.out.println("cancel===============");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
 
-
-
+                return false;
             }
         });
 
 
         // go backward
-        button_backward = (Button) findViewById(R.id.button_backward);
-        button_backward.setOnClickListener(new View.OnClickListener() {
+        button_backward = (LongClickButton) findViewById(R.id.button_backward);
+        button_backward.setLongClickRepeatListener(new LongClickButton.LongClickRepeatListener() {
             @Override
-            public void onClick(View view) {
+            public void repeatAction() {
                 try {
-                    robotPlatform.moveBy(MoveDirection.BACKWARD);
+                    moveAction = robotPlatform.moveBy(MoveDirection.BACKWARD);
+
+                    System.out.println("repeatAction===============");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            }
+        }, 200);
+
+        button_backward.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+
+                if(motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                    try {
+                        moveAction = robotPlatform.moveBy(MoveDirection.BACKWARD);
+
+                        System.out.println("ACTION_DOWN===============");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    try {
+
+                        if(!moveAction.isEmpty())
+                        {
+                            moveAction.cancel();
+                        }
+
+
+                        System.out.println("cancel===============");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                return false;
             }
         });
 
         // turn left
-        button_turn_left = (Button) findViewById(R.id.button_turn_left);
-        button_turn_left.setOnClickListener(new View.OnClickListener() {
+        button_turn_left = (LongClickButton) findViewById(R.id.button_turn_left);
+        button_turn_left.setLongClickRepeatListener(new LongClickButton.LongClickRepeatListener() {
             @Override
-            public void onClick(View view) {
+            public void repeatAction() {
                 try {
-                    robotPlatform.moveBy(MoveDirection.TURN_LEFT);
+                    moveAction = robotPlatform.moveBy(MoveDirection.TURN_LEFT);
+
+                    System.out.println("repeatAction===============");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            }
+        }, 200);
 
+        button_turn_left.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+
+                if(motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                    try {
+                        moveAction = robotPlatform.moveBy(MoveDirection.TURN_LEFT);
+
+                        System.out.println("ACTION_DOWN===============");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    try {
+
+                        if(!moveAction.isEmpty())
+                        {
+                            moveAction.cancel();
+                        }
+
+
+                        System.out.println("cancel===============");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                return false;
             }
         });
 
         // turn right
-        button_turn_right = (Button) findViewById(R.id.button_turn_right);
-        button_turn_right.setOnClickListener(new View.OnClickListener() {
+        button_turn_right = (LongClickButton) findViewById(R.id.button_turn_right);
+        button_turn_right.setLongClickRepeatListener(new LongClickButton.LongClickRepeatListener() {
+            @Override
+            public void repeatAction() {
+                try {
+                    moveAction = robotPlatform.moveBy(MoveDirection.TURN_RIGHT);
+
+                    System.out.println("repeatAction===============");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }, 200);
+
+        button_turn_right.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+
+                if(motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                    try {
+                        moveAction = robotPlatform.moveBy(MoveDirection.TURN_RIGHT);
+
+                        System.out.println("ACTION_DOWN===============");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    try {
+
+                        if(!moveAction.isEmpty())
+                        {
+                            moveAction.cancel();
+                        }
+
+
+                        System.out.println("cancel===============");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                return false;
+            }
+        });
+        // stop
+        button_stop = (LongClickButton) findViewById(R.id.button_stop);
+        button_stop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
-                    robotPlatform.moveBy(MoveDirection.TURN_RIGHT);
+                    if (!moveAction.isEmpty()) {
+                        moveAction.cancel();
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         });
+
 
     }
 
     @Override
     protected void onDestroy() {
         handler.removeCallbacks(runnable); //停止刷新
+        robotPlatform.disconnect();
         super.onDestroy();
     }
 

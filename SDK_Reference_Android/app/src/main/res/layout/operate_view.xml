@@ -172,7 +172,7 @@
                 android:id="@+id/target_x"
                 android:layout_width="70dp"
                 android:layout_height="40dp"
-                android:inputType="number" />
+                android:inputType="number|numberDecimal|numberSigned" />
 
             <TextView
                 android:layout_width="20dp"
@@ -183,9 +183,10 @@
                 android:id="@+id/target_y"
                 android:layout_width="70dp"
                 android:layout_height="40dp"
-                android:inputType="number" />
+                android:inputType="number|numberDecimal|numberSigned" />
 
         </LinearLayout>
+
 
         <Button
             android:id="@+id/to_point"
@@ -193,6 +194,9 @@
             android:layout_height="36dp"
             android:text="到这去"
             android:layout_gravity="right" />
+
+
+
 
     </LinearLayout>
 
