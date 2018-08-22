@@ -37,6 +37,7 @@ import com.slamtec.slamware.robot.MoveOption;
 import com.slamtec.slamware.robot.Pose;
 
 import static android.graphics.Bitmap.Config.ARGB_8888;
+import static android.graphics.Bitmap.Config.RGB_565;
 import static android.graphics.BitmapFactory.decodeByteArray;
 import static android.graphics.ColorSpace.Model.RGB;
 import static com.slamtec.slamware.robot.MapType.BITMAP_8BIT;
@@ -44,22 +45,18 @@ import static com.slamtec.slamware.robot.MapType.BITMAP_8BIT;
 public class MainActivity extends Activity {
 
     private static final String TAG = "MainActivity";
+
     public static AbstractSlamwarePlatform robotPlatform;
 
-    private IMoveAction moveAction;
+    public static IMoveAction moveAction;
 
     private com.slamtec.slamware.robot.Map map;
 
     ImageView imageView;
 
-
     private String deviceId;
 
-    LongClickButton button_forward;
-    LongClickButton button_backward;
-    LongClickButton button_turn_left;
-    LongClickButton button_turn_right;
-    LongClickButton button_stop;
+
     TextView current_location_x;
     TextView current_location_y;
     TextView current_location_yaw;
@@ -73,15 +70,13 @@ public class MainActivity extends Activity {
     EditText targetY;
 
 
-
-
     private int i = 0;
 
     private Handler handler = new Handler();
     private Runnable runnable = new Runnable() {
         public void run() {
             this.update();
-            handler.postDelayed(this, 33);// 间隔100ms
+            handler.postDelayed(this, 100);// 间隔33ms
         }
 
         void update() {
@@ -104,9 +99,7 @@ public class MainActivity extends Activity {
                 RectF knownArea = robotPlatform.getKnownArea(MapType.BITMAP_8BIT, MapKind.EXPLORE_MAP);
                 map = robotPlatform.getMap(MapType.BITMAP_8BIT, MapKind.EXPLORE_MAP, knownArea);
                 mapWidth = map.getDimension().getWidth();
-/*                System.out.println("mapWidth = " + mapWidth);*/
                 mapHeight = map.getDimension().getHeight();
-/*                System.out.println("mapHeight = " + mapHeight);*/
 
                 Bitmap bitmap = Bitmap.createBitmap(mapWidth, mapHeight, ARGB_8888);
 
@@ -114,17 +107,22 @@ public class MainActivity extends Activity {
                     for (int posX = 0; posX < mapWidth; ++posX) {
                         // get map pixel
                         byte[] data = map.getData();
-                        byte mapValue_8bit = (byte) (data[posX + posY * mapWidth]);
+
+                        // (-128, 127) to (0, 255)
+
+                        int rawColor = data[posX + posY * mapWidth];
+
+                        rawColor += 127;
 
                         // fill the bitmap data
-                        bitmap.setPixel(posX, posY, mapValue_8bit<<24 | mapValue_8bit<<16 | mapValue_8bit<<8);
+                        bitmap.setPixel(posX, posY, rawColor | rawColor<<8 | rawColor<<16 | 0xC0<<24);
+
                     }
                 }
 
                 BitmapDrawable bmpDraw=new BitmapDrawable(bitmap);
 
                 imageView.setImageDrawable(bmpDraw);
-                System.out.println("ImageView Drawable");
 
                 /* 更新机器人运动状态 */
                 if (moveAction!=null && moveAction.isEmpty()) {
@@ -221,238 +219,27 @@ public class MainActivity extends Activity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
                 if(targetX.length()==0 || targetY.length()==0) {
                     Toast.makeText(MainActivity.this, "请输入目标点坐标", Toast.LENGTH_SHORT).show();
                 } else {
-
                     try {
                         float x = Float.parseFloat(targetX.getText().toString());
                         float y = Float.parseFloat(targetY.getText().toString());
 
-                        System.out.println("x = " + x);
-                        System.out.println("y = " + y);
-
                         MoveOption moveOption = new MoveOption();
-
                         moveOption.setPrecise(true);
                         moveOption.setMilestone(true);
 
                         Log.d(TAG, "Move To");
-                        Location location1 = new Location(x, y, 0);
 
-                        moveAction = robotPlatform.moveTo(location1, moveOption, 0);
+                        moveAction = robotPlatform.moveTo(new Location(x, y, 0), moveOption, 0);
 //                        action.waitUntilDone();
-                        System.out.println(moveAction.getStatus());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
             }
         });
-
-        // go forward
-        button_forward = (LongClickButton) findViewById(R.id.button_forward);
-
-        button_forward.setLongClickRepeatListener(new LongClickButton.LongClickRepeatListener() {
-            @Override
-            public void repeatAction() {
-                try {
-                    moveAction = robotPlatform.moveBy(MoveDirection.FORWARD);
-
-                    System.out.println("repeatAction===============");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }, 200);
-
-        button_forward.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-
-                if(motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                    try {
-                        moveAction = robotPlatform.moveBy(MoveDirection.FORWARD);
-
-                        System.out.println("ACTION_DOWN===============");
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                } else if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                    try {
-
-                        if(!moveAction.isEmpty())
-                        {
-                            moveAction.cancel();
-                        }
-
-
-                        System.out.println("cancel===============");
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                return false;
-            }
-        });
-
-
-        // go backward
-        button_backward = (LongClickButton) findViewById(R.id.button_backward);
-        button_backward.setLongClickRepeatListener(new LongClickButton.LongClickRepeatListener() {
-            @Override
-            public void repeatAction() {
-                try {
-                    moveAction = robotPlatform.moveBy(MoveDirection.BACKWARD);
-
-                    System.out.println("repeatAction===============");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }, 200);
-
-        button_backward.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-
-                if(motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                    try {
-                        moveAction = robotPlatform.moveBy(MoveDirection.BACKWARD);
-
-                        System.out.println("ACTION_DOWN===============");
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                } else if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                    try {
-
-                        if(!moveAction.isEmpty())
-                        {
-                            moveAction.cancel();
-                        }
-
-
-                        System.out.println("cancel===============");
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                return false;
-            }
-        });
-
-        // turn left
-        button_turn_left = (LongClickButton) findViewById(R.id.button_turn_left);
-        button_turn_left.setLongClickRepeatListener(new LongClickButton.LongClickRepeatListener() {
-            @Override
-            public void repeatAction() {
-                try {
-                    moveAction = robotPlatform.moveBy(MoveDirection.TURN_LEFT);
-
-                    System.out.println("repeatAction===============");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }, 200);
-
-        button_turn_left.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-
-                if(motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                    try {
-                        moveAction = robotPlatform.moveBy(MoveDirection.TURN_LEFT);
-
-                        System.out.println("ACTION_DOWN===============");
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                } else if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                    try {
-
-                        if(!moveAction.isEmpty())
-                        {
-                            moveAction.cancel();
-                        }
-
-
-                        System.out.println("cancel===============");
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                return false;
-            }
-        });
-
-        // turn right
-        button_turn_right = (LongClickButton) findViewById(R.id.button_turn_right);
-        button_turn_right.setLongClickRepeatListener(new LongClickButton.LongClickRepeatListener() {
-            @Override
-            public void repeatAction() {
-                try {
-                    moveAction = robotPlatform.moveBy(MoveDirection.TURN_RIGHT);
-
-                    System.out.println("repeatAction===============");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }, 200);
-
-        button_turn_right.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-
-                if(motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                    try {
-                        moveAction = robotPlatform.moveBy(MoveDirection.TURN_RIGHT);
-
-                        System.out.println("ACTION_DOWN===============");
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                } else if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                    try {
-
-                        if(!moveAction.isEmpty())
-                        {
-                            moveAction.cancel();
-                        }
-
-
-                        System.out.println("cancel===============");
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                return false;
-            }
-        });
-        // stop
-        button_stop = (LongClickButton) findViewById(R.id.button_stop);
-        button_stop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    if (!moveAction.isEmpty()) {
-                        moveAction.cancel();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
-
     }
 
     @Override

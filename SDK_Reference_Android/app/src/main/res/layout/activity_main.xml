@@ -8,8 +8,8 @@
         android:id="@+id/slamware_map"
         android:layout_weight="1"
         android:layout_height="match_parent"
-        android:layout_width="match_parent"
-        android:background="@color/dim_foreground_dark_disabled" />
+        android:layout_width="match_parent" />
+        <!--android:background="@color/dim_foreground_dark_disabled"-->
 
     <include
         layout="@layout/operate_view"

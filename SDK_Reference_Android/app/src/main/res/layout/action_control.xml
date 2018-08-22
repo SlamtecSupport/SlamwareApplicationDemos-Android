@@ -12,7 +12,7 @@
         android:text="运动控制"
         android:textStyle="bold" />
 
-    <com.slamtec.sdk_reference_android.LongClickButton
+    <Button
         android:id="@+id/button_stop"
         android:layout_width="53dp"
         android:layout_height="45dp"
@@ -29,7 +29,6 @@
         android:layout_alignLeft="@+id/button_stop"
         android:text="向前"
         android:textAllCaps="false" />
-
 
 
     <com.slamtec.sdk_reference_android.LongClickButton

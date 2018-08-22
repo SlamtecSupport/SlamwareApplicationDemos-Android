@@ -14,6 +14,7 @@ import com.slamtec.slamware.discovery.DeviceManager;
 
 import static com.slamtec.sdk_reference_android.MainActivity.robotPlatform;
 
+
 public class LoginActivity extends AppCompatActivity {
 
     private EditText ip_address;
@@ -36,7 +37,6 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 if (ip_address.length() == 0 || ip_address.length() == 0) {
-                    //    System.out.println("请输入机器人IP地址");
                     Toast.makeText(LoginActivity.this, "请输入机器人IP地址", Toast.LENGTH_LONG).show();
                 } else {
 

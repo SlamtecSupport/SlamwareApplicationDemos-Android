@@ -26,6 +26,8 @@ public class LongClickButton extends Button{
      */
     private long intervalTime;
 
+    private boolean needHandle;
+
     private MyHandler handler;
 
     public LongClickButton(Context context) {
@@ -50,6 +52,7 @@ public class LongClickButton extends Button{
      * 初始化监听
      */
     private void init() {
+        needHandle = false;
         handler = new MyHandler(this);
         setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -69,6 +72,8 @@ public class LongClickButton extends Button{
         public void run() {
             while (LongClickButton.this.isPressed()) {
                 handler.sendEmptyMessage(1);
+
+                needHandle = true;
 
                 try {
                     sleep(intervalTime);
@@ -95,6 +100,7 @@ public class LongClickButton extends Button{
 
             LongClickButton button = ref.get();
             if (button != null && button.repeatListener != null) {
+
                 button.repeatListener.repeatAction();
             }
         }

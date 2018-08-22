@@ -202,14 +202,13 @@
 
 
 
-
-    <include
-        layout="@layout/action_control"
+    <com.slamtec.sdk_reference_android.ActionControl
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp"
         android:layout_weight="1"
         android:background="@color/dim_foreground_dark_disabled"/>
+
 
 </LinearLayout>

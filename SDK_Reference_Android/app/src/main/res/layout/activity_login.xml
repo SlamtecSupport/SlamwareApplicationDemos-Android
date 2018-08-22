@@ -24,12 +24,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
-            android:hint="10.0.130.71"
+            android:hint="默认IP为192.168.11.1"
             android:gravity="center"
-
-
-
-
             />
 
     </LinearLayout>
