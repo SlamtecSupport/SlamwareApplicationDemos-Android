@@ -9,11 +9,20 @@ import android.widget.TextView;
 import com.slamtec.slamware.AbstractSlamwarePlatform;
 import com.slamtec.slamware.SlamwareCorePlatform;
 import com.slamtec.slamware.discovery.DeviceManager;
+import com.slamtec.slamware.exceptions.ConnectionFailException;
+import com.slamtec.slamware.exceptions.ConnectionTimeOutException;
+import com.slamtec.slamware.exceptions.InvalidArgumentException;
+import com.slamtec.slamware.exceptions.ParseInvalidException;
+import com.slamtec.slamware.exceptions.RequestFailException;
+import com.slamtec.slamware.exceptions.UnauthorizedRequestException;
+import com.slamtec.slamware.exceptions.UnsupportedCommandException;
 import com.slamtec.slamware.robot.DockingStatus;
 import com.slamtec.slamware.robot.Pose;
 import com.slamtec.slamware.robot.PowerStatus;
 
 import java.io.IOException;
+
+import static java.lang.Thread.sleep;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,26 +43,17 @@ public class MainActivity extends AppCompatActivity {
         TextView sleepMode = (TextView) findViewById(R.id.sleep_mode);
 
 
-        AbstractSlamwarePlatform robotPlatform = DeviceManager.connect("192.168.11.1", 1445);
-
-        try {
-            Pose pose = robotPlatform.getPose();
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-
+        /* 与底盘连接 */
+        AbstractSlamwarePlatform robotPlatform = DeviceManager.connect("10.0.130.71", 1445);
 
         /* 获取版本信息 */
         sdkVersion.setText(robotPlatform.getSDKVersion());
 
-
-
         try {
-
             /* 获取Slamware ID */
             deviceID.setText(robotPlatform.getDeviceId());
 
-            /* 获取电源相关信息 */
+            /* 获取电源状态相关信息 */
             PowerStatus powerStatus = robotPlatform.getPowerStatus();
 
             /* 是否正在充电 */
@@ -96,15 +96,40 @@ public class MainActivity extends AppCompatActivity {
                 case Unknown:
                     sleepMode.setText("Unknown");
                     break;
+                    default:
+                        break;
             }
 
-            System.out.println("Robot Platform is Charging:        " + powerStatus.isCharging());
-            System.out.println("Robot Platform is DC connected:    " + powerStatus.isDCConnected());
-            System.out.println("Robot Platform Battery Percentage: " + powerStatus.getBatteryPercentage());
+            /* print log info */
+            Log.d(TAG, "======= Robot Platform Power Status =======");
+            Log.d(TAG, "Robot Platform is Charging:        " + powerStatus.isCharging());
+            Log.d(TAG, "Robot Platform is DC connected:    " + powerStatus.isDCConnected());
+            Log.d(TAG, "Robot Platform Battery Percentage: " + powerStatus.getBatteryPercentage());
+            Log.d(TAG, "Robot Platform Sleep Mode:         " + powerStatus.getSleepMode());
+            Log.d(TAG, "Robot Platform Docking Status:     " + powerStatus.getDockingStatus());
+            Log.d(TAG, "===========================================");
 
-        } catch(Exception e) {
-                e.printStackTrace();
-
+        } catch (ConnectionFailException e) {
+            Log.d(TAG, "Connection Fail");
+            e.printStackTrace();
+        } catch (ParseInvalidException e) {
+            Log.d(TAG, "Parse Invalid");
+            e.printStackTrace();
+        } catch (InvalidArgumentException e) {
+            Log.d(TAG, "Invalid Argument");
+            e.printStackTrace();
+        } catch (ConnectionTimeOutException e) {
+            Log.d(TAG, "Connection TimeOut");
+            e.printStackTrace();
+        } catch (RequestFailException e) {
+            Log.d(TAG, "Request Fail");
+            e.printStackTrace();
+        } catch (UnauthorizedRequestException e) {
+            Log.d(TAG, "Unauthorized Request");
+            e.printStackTrace();
+        } catch (UnsupportedCommandException e) {
+            Log.d(TAG, "Unsupported Command");
+            e.printStackTrace();
         }
     }
 }
