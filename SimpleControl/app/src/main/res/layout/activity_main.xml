@@ -6,11 +6,12 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <ImageView
-        android:id="@+id/button_center"
+    <Button
+        android:id="@+id/button_stop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:text="Stop"
         android:src="@mipmap/splash_icon"
         android:textAllCaps="false"/>
 
@@ -18,9 +19,9 @@
         android:id="@+id/button_forward"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@id/button_center"
-        android:layout_alignRight="@+id/button_center"
-        android:layout_alignLeft="@+id/button_center"
+        android:layout_above="@id/button_stop"
+        android:layout_alignRight="@+id/button_stop"
+        android:layout_alignLeft="@+id/button_stop"
         android:text="Go Forward"
         android:textAllCaps="false"/>
 
@@ -28,9 +29,9 @@
         android:id="@+id/button_backward"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/button_center"
-        android:layout_alignRight="@+id/button_center"
-        android:layout_alignLeft="@+id/button_center"
+        android:layout_below="@+id/button_stop"
+        android:layout_alignRight="@+id/button_stop"
+        android:layout_alignLeft="@+id/button_stop"
         android:text="Go Backward"
         android:textAllCaps="false"/>
 
@@ -38,9 +39,9 @@
         android:id="@+id/button_turn_left"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@+id/button_center"
-        android:layout_alignTop="@id/button_center"
-        android:layout_alignBottom="@id/button_center"
+        android:layout_toLeftOf="@+id/button_stop"
+        android:layout_alignTop="@id/button_stop"
+        android:layout_alignBottom="@id/button_stop"
         android:text="Turn left"
         android:textAllCaps="false"/>
 
@@ -48,11 +49,10 @@
         android:id="@+id/button_turn_right"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/button_center"
-        android:layout_alignTop="@id/button_center"
-        android:layout_alignBottom="@id/button_center"
+        android:layout_toRightOf="@+id/button_stop"
+        android:layout_alignTop="@id/button_stop"
+        android:layout_alignBottom="@id/button_stop"
         android:text="Turn right"
         android:textAllCaps="false"/>
-
 
 </RelativeLayout>
