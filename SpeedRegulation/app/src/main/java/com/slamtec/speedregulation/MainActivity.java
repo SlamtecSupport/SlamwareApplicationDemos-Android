@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        SlamwareCorePlatform robotPlatform = SlamwareCorePlatform.connect("192.168.11.1", 1445);
+        SlamwareCorePlatform robotPlatform = SlamwareCorePlatform.connect("10.0.130.71", 1445);
 
         IMoveAction action;
         try {
@@ -55,42 +55,35 @@ public class MainActivity extends AppCompatActivity {
         }
 
         Location location1 = new Location(0, 1, 0);
-        Location location2 = new Location(-1, 0, 0);
+        Location location2 = new Location(1, 0, 0);
         Location location3 = new Location(0, 0, 0);
 
         while (true) {
-
             try {
 
                 action = robotPlatform.moveTo(location1, false, true);
-
                 if (action.getStatus() == ActionStatus.ERROR) {
-                    Log.d(TAG, "onCreate: Acvtion Faild, " + action.getReason());
+                    Log.d(TAG, "Acvtion Faild, " + action.getReason());
                 }
                 robotPlatform.setSystemParameter(SYSPARAM_ROBOT_SPEED, SYSVAL_ROBOT_SPEED_HIGH);
-                Log.d(TAG, "onCreate: Robot is moving to " + "(" + location1.getX() + ", " + location1.getY() + ")");
-
+                Log.d(TAG, "Robot is moving to " + "(" + location1.getX() + ", " + location1.getY() + ")");
                 action.waitUntilDone();
-
 
                 action = robotPlatform.moveTo(location2, false, true);
-
                 if (action.getStatus() == ActionStatus.ERROR) {
-                    Log.d(TAG, "onCreate: Acvtion Faild, " + action.getReason());
+                    Log.d(TAG, "Acvtion Faild, " + action.getReason());
                 }
                 robotPlatform.setSystemParameter(SYSPARAM_ROBOT_SPEED, SYSVAL_ROBOT_SPEED_LOW);
+                Log.d(TAG, "Robot is moving to " + "(" + location2.getX() + ", " + location2.getY() + ")");
                 action.waitUntilDone();
-
 
                 action = robotPlatform.moveTo(location3, false, true);
-
                 if (action.getStatus() == ActionStatus.ERROR) {
-                    Log.d(TAG, "onCreate: Acvtion Faild, " + action.getReason());
+                    Log.d(TAG, "Acvtion Faild, " + action.getReason());
                 }
                 robotPlatform.setSystemParameter(SYSPARAM_ROBOT_SPEED, SYSVAL_ROBOT_SPEED_MEDIUM);
+                Log.d(TAG, "Robot is moving to " + "(" + location3.getX() + ", " + location3.getY() + ")");
                 action.waitUntilDone();
-
-
 
             } catch (RequestFailException e) {
                 e.printStackTrace();
@@ -109,10 +102,6 @@ public class MainActivity extends AppCompatActivity {
             } catch (OperationFailException e) {
                 e.printStackTrace();
             }
-
-
         }
-
-
     }
 }
