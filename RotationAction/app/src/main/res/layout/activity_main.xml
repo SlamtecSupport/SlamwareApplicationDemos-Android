@@ -11,12 +11,19 @@
         android:id="@+id/button_clockwise"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:text="逆时针90度"/>
+        android:text="逆时针180度"/>
 
     <Button
         android:id="@+id/button_anticlockwise"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:text="顺时针90度"/>
+        android:text="顺时针180度"/>
+
+    <Button
+        android:id="@+id/button_rotate_to"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:text="旋转到指定角度"/>
+
 
 </LinearLayout>
