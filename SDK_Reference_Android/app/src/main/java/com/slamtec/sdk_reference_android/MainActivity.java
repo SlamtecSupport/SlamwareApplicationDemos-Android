@@ -76,7 +76,7 @@ public class MainActivity extends Activity {
     private Runnable runnable = new Runnable() {
         public void run() {
             this.update();
-            handler.postDelayed(this, 100);// 间隔33ms
+            handler.postDelayed(this, 10);// 第一次间隔10ms启动线程
         }
 
         void update() {
@@ -109,7 +109,6 @@ public class MainActivity extends Activity {
                         byte[] data = map.getData();
 
                         // (-128, 127) to (0, 255)
-
                         int rawColor = data[posX + posY * mapWidth];
 
                         rawColor += 127;
@@ -180,7 +179,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        handler.postDelayed(runnable, 50);
+        handler.postDelayed(runnable, 100);
 
         imageView = (ImageView)findViewById(R.id.slamware_map);
 

@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         /* 连接底盘 */
-        robotPlatform = DeviceManager.connect("10.0.130.71", 1445);
+        robotPlatform = DeviceManager.connect("10.0.129.192", 1445);
         if(robotPlatform != null) {
             Log.d(TAG, "Slamware connect success");
         }

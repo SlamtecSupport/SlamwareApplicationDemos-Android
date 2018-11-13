@@ -1,7 +1,7 @@
 package com.slamtec.www.gohomecharge;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.slamtec.slamware.AbstractSlamwarePlatform;
@@ -62,3 +62,5 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 }
+
+
