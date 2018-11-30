@@ -38,15 +38,10 @@ public class MainActivity extends AppCompatActivity {
             recoverLocalizationOptions.setRecoverMovementType(Any);
             IMoveAction action = robotPlatform.recoverLocalization(new RectF(0f, 0f, 0f, 0f), recoverLocalizationOptions);
 
-      //      action.waitUntilDone();
-
-            Thread.sleep(4000);
-                Log.d(TAG, "onCreate: =================");
+            action.waitUntilDone();
+            Log.d(TAG, "onCreate: =================");
 
             Log.d(TAG, "onCreate: action = " + action.getStatus());
-
-            /////
-
 
 
         } catch (RequestFailException e) {
@@ -62,8 +57,6 @@ public class MainActivity extends AppCompatActivity {
         } catch (ParseInvalidException e) {
             e.printStackTrace();
         } catch (InvalidArgumentException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
             e.printStackTrace();
         }
 

@@ -13,7 +13,8 @@ public class MainActivity extends AppCompatActivity {
 
         try {
             // connect to the robot.
-            String ip = "10.0.130.71";
+            String ip = "10.16.2.160";
+//            String ip = "192.168.11.1";
             int port = 1445;
             Log.i("MyCorePlatform", "start to connect.");
             com.slamtec.slamware.AbstractSlamwarePlatform corePltfm = com.slamtec.slamware.discovery.DeviceManager.connect(ip, port);

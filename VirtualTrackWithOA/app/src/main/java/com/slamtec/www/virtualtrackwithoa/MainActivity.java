@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         /* 与底盘连接 */
-        final AbstractSlamwarePlatform robotPlatform = DeviceManager.connect("10.0.130.71", 1445);
+        final AbstractSlamwarePlatform robotPlatform = DeviceManager.connect("10.16.2.160", 1445);
 
         try {
 
@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
             MoveOption moveOption = new MoveOption();
             moveOption.setTrackWithOA(true);
-
+            moveOption.setKeyPoints(true);
             action = robotPlatform.moveTo(new Location(7, 0, 0), moveOption, 0);
 
             action.waitUntilDone();
